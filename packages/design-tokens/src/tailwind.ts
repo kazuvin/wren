@@ -1,4 +1,4 @@
-import { colors } from "./tokens/colors";
+import { colorsCSS } from "./tokens/colors";
 import { radius } from "./tokens/radius";
 import { spacing } from "./tokens/spacing";
 import { fontFamily, fontSize, fontWeight, lineHeight } from "./tokens/typography";
@@ -12,6 +12,7 @@ function formatEntries(entries: Record<string, string>, prefix: string): string 
 /**
  * Tailwind v4 の @theme ブロック用 CSS を生成する。
  * light テーマをデフォルトとし、dark テーマは prefers-color-scheme で切り替える。
+ * カラー値は oklch() 形式で出力する。
  */
 export function generateThemeCSS(): string {
 	const lines: string[] = [];
@@ -26,7 +27,7 @@ export function generateThemeCSS(): string {
 	lines.push(formatEntries(radius, "radius"));
 	lines.push("");
 	lines.push("\t/* Light theme colors (default) */");
-	lines.push(formatEntries(colors.light, "color"));
+	lines.push(formatEntries(colorsCSS.light, "color"));
 	lines.push("}");
 
 	lines.push("");
@@ -34,7 +35,7 @@ export function generateThemeCSS(): string {
 	// Dark mode override
 	lines.push("@media (prefers-color-scheme: dark) {");
 	lines.push("\t:root {");
-	for (const [key, value] of Object.entries(colors.dark)) {
+	for (const [key, value] of Object.entries(colorsCSS.dark)) {
 		lines.push(`\t\t--color-${key}: ${value};`);
 	}
 	lines.push("\t}");

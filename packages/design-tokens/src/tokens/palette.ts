@@ -1,4 +1,4 @@
-import { type HSL, hslToHex } from "./hsl";
+import { type OKLCH, oklchToCSS, oklchToHex } from "./oklch";
 
 export type PaletteTokens = {
 	background: string;
@@ -28,81 +28,71 @@ export type PaletteTokens = {
 	overlay: string;
 };
 
-const h = hslToHex;
-
-export const lightPalette: PaletteTokens = {
+// ソースオブトゥルース: oklch(L, C, H)
+// 現行 HSL 値から culori で正確に変換した値
+const lightOKLCH: Record<keyof PaletteTokens, OKLCH | null> = {
 	// Base
-	background: h({ h: 263, s: 8, l: 96 }),
-	surface: h({ h: 263, s: 12, l: 91 }),
-	surfaceRaised: h({ h: 0, s: 0, l: 100 }),
-	card: h({ h: 0, s: 0, l: 100 }),
-	cardForeground: h({ h: 263, s: 8, l: 18 }),
+	background: { l: 0.968, c: 0.0023, h: 303.6 },
+	surface: { l: 0.926, c: 0.0077, h: 303.5 },
+	surfaceRaised: { l: 1, c: 0, h: 0 },
+	card: { l: 1, c: 0, h: 0 },
+	cardForeground: { l: 0.292, c: 0.0137, h: 302.9 },
 	// Text
-	text: h({ h: 263, s: 8, l: 18 }),
-	textMuted: h({ h: 263, s: 8, l: 46 }),
-	textOnPrimary: "#FFFFFF",
-	// Primary (ニアブラック — モノトーン UI)
-	primary: h({ h: 263, s: 10, l: 15 }),
-	primaryMuted: h({ h: 263, s: 5, l: 95 }),
-	// Accent (蛍石パープル — カテゴリと統一したパステルトーン)
-	accent: h({ h: 263, s: 55, l: 78 }),
-	accentMuted: h({ h: 263, s: 30, l: 94 }),
-	// Status
-	destructive: h({ h: 0, s: 65, l: 52 }),
-	destructiveMuted: h({ h: 0, s: 40, l: 95 }),
-	success: h({ h: 152, s: 55, l: 38 }),
-	successMuted: h({ h: 152, s: 35, l: 93 }),
-	warning: h({ h: 38, s: 85, l: 48 }),
-	warningMuted: h({ h: 38, s: 50, l: 94 }),
-	info: h({ h: 215, s: 65, l: 52 }),
-	infoMuted: h({ h: 215, s: 40, l: 94 }),
-	// UI
-	border: h({ h: 263, s: 10, l: 86 }),
-	borderMuted: h({ h: 263, s: 8, l: 92 }),
-	icon: h({ h: 263, s: 8, l: 46 }),
-	iconMuted: h({ h: 263, s: 6, l: 64 }),
-	overlay: "rgba(0, 0, 0, 0.4)",
-};
-
-// Light HSL 定義（Dark 変換用の参照テーブル）
-const lightHSL: Record<keyof PaletteTokens, HSL | null> = {
-	background: { h: 263, s: 8, l: 96 },
-	surface: { h: 263, s: 12, l: 91 },
-	surfaceRaised: { h: 0, s: 0, l: 100 },
-	card: { h: 0, s: 0, l: 100 },
-	cardForeground: { h: 263, s: 8, l: 18 },
-	text: { h: 263, s: 8, l: 18 },
-	textMuted: { h: 263, s: 8, l: 46 },
+	text: { l: 0.292, c: 0.0137, h: 302.9 },
+	textMuted: { l: 0.544, c: 0.03, h: 302.8 },
 	textOnPrimary: null,
-	primary: { h: 263, s: 10, l: 15 },
-	primaryMuted: { h: 263, s: 5, l: 95 },
-	accent: { h: 263, s: 55, l: 78 },
-	accentMuted: { h: 263, s: 30, l: 94 },
-	destructive: { h: 0, s: 65, l: 52 },
-	destructiveMuted: { h: 0, s: 40, l: 95 },
-	success: { h: 152, s: 55, l: 38 },
-	successMuted: { h: 152, s: 35, l: 93 },
-	warning: { h: 38, s: 85, l: 48 },
-	warningMuted: { h: 38, s: 50, l: 94 },
-	info: { h: 215, s: 65, l: 52 },
-	infoMuted: { h: 215, s: 40, l: 94 },
-	border: { h: 263, s: 10, l: 86 },
-	borderMuted: { h: 263, s: 8, l: 92 },
-	icon: { h: 263, s: 8, l: 46 },
-	iconMuted: { h: 263, s: 6, l: 64 },
+	// Primary (ニアブラック — モノトーン UI)
+	primary: { l: 0.26, c: 0.0147, h: 302.8 },
+	primaryMuted: { l: 0.961, c: 0.0018, h: 303.6 },
+	// Accent (蛍石パープル)
+	accent: { l: 0.774, c: 0.09, h: 301.9 },
+	accentMuted: { l: 0.946, c: 0.0128, h: 303.4 },
+	// Status
+	destructive: { l: 0.576, c: 0.196, h: 25.9 },
+	destructiveMuted: { l: 0.955, c: 0.011, h: 17.3 },
+	success: { l: 0.601, c: 0.1226, h: 158.5 },
+	successMuted: { l: 0.954, c: 0.0153, h: 166.5 },
+	warning: { l: 0.733, c: 0.1531, h: 72.2 },
+	warningMuted: { l: 0.962, c: 0.0142, h: 81.5 },
+	info: { l: 0.576, c: 0.1578, h: 257.5 },
+	infoMuted: { l: 0.949, c: 0.0111, h: 256.7 },
+	// UI
+	border: { l: 0.886, c: 0.0101, h: 303.5 },
+	borderMuted: { l: 0.936, c: 0.0046, h: 303.6 },
+	icon: { l: 0.544, c: 0.03, h: 302.8 },
+	iconMuted: { l: 0.705, c: 0.0165, h: 303.3 },
 	overlay: null,
 };
 
-// Strong accent トークン（L+10, S+5）— ステータス色用
-const strongAccentKeys = new Set<keyof PaletteTokens>([
-	"destructive",
-	"success",
-	"warning",
-	"info",
-]);
+function buildPalette(
+	source: Record<keyof PaletteTokens, OKLCH | null>,
+	convert: (oklch: OKLCH) => string,
+): PaletteTokens {
+	const result = {} as Record<keyof PaletteTokens, string>;
+	for (const key of Object.keys(source) as (keyof PaletteTokens)[]) {
+		if (key === "textOnPrimary") {
+			result[key] = "#FFFFFF";
+		} else if (key === "overlay") {
+			result[key] = "rgba(0, 0, 0, 0.4)";
+		} else {
+			const oklch = source[key];
+			if (oklch) result[key] = convert(oklch);
+		}
+	}
+	return result as PaletteTokens;
+}
 
-// Pastel (Muted) トークン（L→15, S×0.5）
-const pastelKeys = new Set<keyof PaletteTokens>([
+// HEX 出力 (RN 向け)
+export const lightPalette: PaletteTokens = buildPalette(lightOKLCH, oklchToHex);
+
+// CSS 出力 (Tailwind 向け)
+export const lightPaletteCSS: PaletteTokens = buildPalette(lightOKLCH, oklchToCSS);
+
+// ステータス色キー
+const statusKeys = new Set<keyof PaletteTokens>(["destructive", "success", "warning", "info"]);
+
+// Muted 系キー
+const mutedKeys = new Set<keyof PaletteTokens>([
 	"accentMuted",
 	"destructiveMuted",
 	"successMuted",
@@ -110,72 +100,80 @@ const pastelKeys = new Set<keyof PaletteTokens>([
 	"infoMuted",
 ]);
 
-export function generateDarkPalette(_light: PaletteTokens): PaletteTokens {
-	const dark = {} as Record<keyof PaletteTokens, string>;
+function generateDarkOKLCH(): Record<keyof PaletteTokens, OKLCH | null> {
+	const dark = {} as Record<keyof PaletteTokens, OKLCH | null>;
 
-	for (const key of Object.keys(lightHSL) as (keyof PaletteTokens)[]) {
-		const hsl = lightHSL[key];
+	for (const key of Object.keys(lightOKLCH) as (keyof PaletteTokens)[]) {
+		const oklch = lightOKLCH[key];
 
-		if (key === "textOnPrimary") {
-			dark[key] = "#FFFFFF";
+		if (key === "textOnPrimary" || key === "overlay") {
+			dark[key] = null;
+			continue;
+		}
+		if (!oklch) {
+			dark[key] = null;
 			continue;
 		}
 
-		if (key === "overlay") {
-			dark[key] = "rgba(0, 0, 0, 0.7)";
-			continue;
-		}
-
-		if (!hsl) continue;
-
-		if (key === "primary") {
-			// ニアブラック → ライトグレー（ダークモードで反転）
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s, l: 88 });
-			continue;
-		}
-		if (key === "primaryMuted") {
-			// ライトグレー → ダークグレー（ダークモードで反転）
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s, l: 15 });
-			continue;
-		}
-
-		if (key === "accent") {
-			// パステル accent: カテゴリと同じルール (s+5, l→71)
-			dark[key] = hslToHex({ h: hsl.h, s: Math.min(hsl.s + 5, 100), l: 71 });
-			continue;
-		}
 		if (key === "background") {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s, l: 8 });
+			dark[key] = { l: 0.15, c: oklch.c, h: oklch.h };
 		} else if (key === "surface") {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s * 0.5, l: 12 });
+			dark[key] = { l: 0.2, c: oklch.c * 0.5, h: oklch.h };
 		} else if (key === "surfaceRaised") {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s, l: 16 });
+			dark[key] = { l: 0.22, c: 0.005, h: 303 };
 		} else if (key === "card") {
-			dark[key] = hslToHex({ h: 263, s: 8, l: 16 });
-		} else if (key === "cardForeground") {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s * 0.5, l: 92 });
-		} else if (key === "text") {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s * 0.5, l: 92 });
+			dark[key] = { l: 0.22, c: 0.005, h: 303 };
+		} else if (key === "cardForeground" || key === "text") {
+			dark[key] = { l: 0.93, c: oklch.c * 0.5, h: oklch.h };
 		} else if (key === "textMuted" || key === "icon") {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s * 0.6, l: 58 });
+			dark[key] = { l: 0.6, c: oklch.c * 0.6, h: oklch.h };
 		} else if (key === "iconMuted") {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s * 0.5, l: 38 });
+			dark[key] = { l: 0.42, c: oklch.c * 0.5, h: oklch.h };
+		} else if (key === "primary") {
+			dark[key] = { l: 0.9, c: oklch.c, h: oklch.h };
+		} else if (key === "primaryMuted") {
+			dark[key] = { l: 0.22, c: oklch.c, h: oklch.h };
+		} else if (key === "accent") {
+			dark[key] = { l: 0.72, c: oklch.c, h: oklch.h };
+		} else if (statusKeys.has(key)) {
+			dark[key] = { l: Math.min(oklch.l + 0.08, 1), c: oklch.c, h: oklch.h };
+		} else if (mutedKeys.has(key)) {
+			dark[key] = { l: 0.22, c: oklch.c * 0.5, h: oklch.h };
 		} else if (key === "border") {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s * 0.4, l: 22 });
+			dark[key] = { l: 0.28, c: oklch.c * 0.4, h: oklch.h };
 		} else if (key === "borderMuted") {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s * 0.4, l: 18 });
-		} else if (strongAccentKeys.has(key)) {
-			dark[key] = hslToHex({
-				h: hsl.h,
-				s: Math.min(hsl.s + 5, 100),
-				l: Math.min(hsl.l + 10, 100),
-			});
-		} else if (pastelKeys.has(key)) {
-			dark[key] = hslToHex({ h: hsl.h, s: hsl.s * 0.5, l: 15 });
+			dark[key] = { l: 0.22, c: oklch.c * 0.4, h: oklch.h };
 		} else {
-			dark[key] = hslToHex(hsl);
+			dark[key] = oklch;
 		}
 	}
 
-	return dark as PaletteTokens;
+	return dark;
+}
+
+export function generateDarkPalette(): {
+	hex: PaletteTokens;
+	css: PaletteTokens;
+} {
+	const darkSource = generateDarkOKLCH();
+
+	const buildDark = (convert: (oklch: OKLCH) => string): PaletteTokens => {
+		const result = {} as Record<keyof PaletteTokens, string>;
+		for (const key of Object.keys(darkSource) as (keyof PaletteTokens)[]) {
+			if (key === "textOnPrimary") {
+				result[key] = "#FFFFFF";
+			} else if (key === "overlay") {
+				result[key] = "rgba(0, 0, 0, 0.7)";
+			} else {
+				const oklch = darkSource[key];
+				if (oklch) result[key] = convert(oklch);
+			}
+		}
+		return result as PaletteTokens;
+	};
+
+	return {
+		hex: buildDark(oklchToHex),
+		css: buildDark(oklchToCSS),
+	};
 }

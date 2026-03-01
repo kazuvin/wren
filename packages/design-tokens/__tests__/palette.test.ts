@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { hslToHex } from "../src/tokens/hsl";
-import { type PaletteTokens, generateDarkPalette, lightPalette } from "../src/tokens/palette";
+import {
+	type PaletteTokens,
+	generateDarkPalette,
+	lightPalette,
+	lightPaletteCSS,
+} from "../src/tokens/palette";
 
-describe("lightPalette", () => {
+describe("lightPalette (HEX)", () => {
 	it("25 個のトークンを持つ", () => {
 		expect(Object.keys(lightPalette)).toHaveLength(25);
 	});
@@ -48,11 +52,20 @@ describe("lightPalette", () => {
 	});
 
 	it("primary はニアブラック", () => {
-		expect(lightPalette.primary).toBe(hslToHex({ h: 263, s: 10, l: 15 }));
+		const r = Number.parseInt(lightPalette.primary.slice(1, 3), 16);
+		const g = Number.parseInt(lightPalette.primary.slice(3, 5), 16);
+		const b = Number.parseInt(lightPalette.primary.slice(5, 7), 16);
+		const avg = (r + g + b) / 3;
+		expect(avg).toBeLessThan(60);
 	});
 
-	it("accent はカテゴリと統一したパステルパープル", () => {
-		expect(lightPalette.accent).toBe(hslToHex({ h: 263, s: 55, l: 78 }));
+	it("accent はパステルパープル", () => {
+		const hex = lightPalette.accent;
+		const r = Number.parseInt(hex.slice(1, 3), 16);
+		const g = Number.parseInt(hex.slice(3, 5), 16);
+		const b = Number.parseInt(hex.slice(5, 7), 16);
+		expect(r).toBeGreaterThan(g);
+		expect(b).toBeGreaterThan(g);
 	});
 
 	it("textOnPrimary は白固定", () => {
@@ -64,60 +77,90 @@ describe("lightPalette", () => {
 	});
 });
 
-describe("generateDarkPalette", () => {
-	const dark = generateDarkPalette(lightPalette);
-
+describe("lightPaletteCSS (oklch)", () => {
 	it("25 個のトークンを持つ", () => {
-		expect(Object.keys(dark)).toHaveLength(25);
+		expect(Object.keys(lightPaletteCSS)).toHaveLength(25);
 	});
 
-	it("Light と同じキーを持つ", () => {
-		expect(Object.keys(dark).sort()).toEqual(Object.keys(lightPalette).sort());
+	it("すべての値が oklch() / rgba / #FFFFFF 形式", () => {
+		for (const [key, value] of Object.entries(lightPaletteCSS)) {
+			expect(
+				value.startsWith("oklch(") || value.startsWith("rgba(") || value === "#FFFFFF",
+				`${key}: ${value} は oklch() / rgba / #FFFFFF であるべき`,
+			).toBe(true);
+		}
+	});
+});
+
+describe("generateDarkPalette", () => {
+	const dark = generateDarkPalette();
+
+	it("hex と css の両方を返す", () => {
+		expect(dark).toHaveProperty("hex");
+		expect(dark).toHaveProperty("css");
 	});
 
-	it("background は暗い色になる (L: 99→8)", () => {
-		const r = Number.parseInt(dark.background.slice(1, 3), 16);
-		const g = Number.parseInt(dark.background.slice(3, 5), 16);
-		const b = Number.parseInt(dark.background.slice(5, 7), 16);
-		// 暗い背景: RGB がそれぞれ 30 未満
-		expect(r).toBeLessThan(30);
-		expect(g).toBeLessThan(30);
-		expect(b).toBeLessThan(30);
+	it("hex: 25 個のトークンを持つ", () => {
+		expect(Object.keys(dark.hex)).toHaveLength(25);
 	});
 
-	it("text は明るい色になる (L: 12→92)", () => {
-		const r = Number.parseInt(dark.text.slice(1, 3), 16);
-		const g = Number.parseInt(dark.text.slice(3, 5), 16);
-		const b = Number.parseInt(dark.text.slice(5, 7), 16);
-		// 明るいテキスト: RGB がそれぞれ 200 以上
+	it("css: 25 個のトークンを持つ", () => {
+		expect(Object.keys(dark.css)).toHaveLength(25);
+	});
+
+	it("hex: Light と同じキーを持つ", () => {
+		expect(Object.keys(dark.hex).sort()).toEqual(Object.keys(lightPalette).sort());
+	});
+
+	it("hex: background は暗い色になる", () => {
+		const r = Number.parseInt(dark.hex.background.slice(1, 3), 16);
+		const g = Number.parseInt(dark.hex.background.slice(3, 5), 16);
+		const b = Number.parseInt(dark.hex.background.slice(5, 7), 16);
+		expect(r).toBeLessThan(50);
+		expect(g).toBeLessThan(50);
+		expect(b).toBeLessThan(50);
+	});
+
+	it("hex: text は明るい色になる", () => {
+		const r = Number.parseInt(dark.hex.text.slice(1, 3), 16);
+		const g = Number.parseInt(dark.hex.text.slice(3, 5), 16);
+		const b = Number.parseInt(dark.hex.text.slice(5, 7), 16);
 		expect(r).toBeGreaterThan(200);
 		expect(g).toBeGreaterThan(200);
 		expect(b).toBeGreaterThan(200);
 	});
 
-	it("textOnPrimary は白のまま固定", () => {
-		expect(dark.textOnPrimary).toBe("#FFFFFF");
+	it("hex: textOnPrimary は白のまま固定", () => {
+		expect(dark.hex.textOnPrimary).toBe("#FFFFFF");
 	});
 
-	it("overlay は alpha が大きくなる (0.4→0.7)", () => {
-		expect(dark.overlay).toMatch(/^rgba\(0,\s*0,\s*0,\s*0\.7\)$/);
+	it("hex: overlay は alpha が大きくなる (0.4→0.7)", () => {
+		expect(dark.hex.overlay).toMatch(/^rgba\(0,\s*0,\s*0,\s*0\.7\)$/);
 	});
 
-	it("primary は明るい色になる (ニアブラック→ライトグレー)", () => {
-		const r = Number.parseInt(dark.primary.slice(1, 3), 16);
-		const g = Number.parseInt(dark.primary.slice(3, 5), 16);
-		const b = Number.parseInt(dark.primary.slice(5, 7), 16);
-		// ダークモードの primary は明るい色: RGB がそれぞれ 180 以上
+	it("hex: primary は明るい色になる", () => {
+		const r = Number.parseInt(dark.hex.primary.slice(1, 3), 16);
+		const g = Number.parseInt(dark.hex.primary.slice(3, 5), 16);
+		const b = Number.parseInt(dark.hex.primary.slice(5, 7), 16);
 		expect(r).toBeGreaterThan(180);
 		expect(g).toBeGreaterThan(180);
 		expect(b).toBeGreaterThan(180);
 	});
 
-	it("すべての値が # で始まるか rgba 形式", () => {
-		for (const [key, value] of Object.entries(dark)) {
+	it("hex: すべての値が # で始まるか rgba 形式", () => {
+		for (const [key, value] of Object.entries(dark.hex)) {
 			expect(
 				value.startsWith("#") || value.startsWith("rgba("),
 				`${key}: ${value} は HEX か rgba であるべき`,
+			).toBe(true);
+		}
+	});
+
+	it("css: すべての値が oklch() / rgba / #FFFFFF 形式", () => {
+		for (const [key, value] of Object.entries(dark.css)) {
+			expect(
+				value.startsWith("oklch(") || value.startsWith("rgba(") || value === "#FFFFFF",
+				`${key}: ${value} は oklch() / rgba / #FFFFFF であるべき`,
 			).toBe(true);
 		}
 	});

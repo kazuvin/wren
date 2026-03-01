@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { colors, fontSize, fontWeight, lineHeight, parseNumeric, radius, spacing } from "../src";
+import {
+	colors,
+	colorsCSS,
+	fontSize,
+	fontWeight,
+	lineHeight,
+	parseNumeric,
+	radius,
+	spacing,
+} from "../src";
 import { nestedTokensToCSSProperties, tokensToCSSProperties } from "../src/css";
 import { generateThemeCSS } from "../src/tailwind";
 
@@ -64,6 +73,28 @@ describe("tokens", () => {
 	});
 });
 
+describe("colorsCSS", () => {
+	it("light/dark の両テーマが定義されている", () => {
+		expect(Object.keys(colorsCSS.light)).toEqual(Object.keys(colorsCSS.dark));
+	});
+
+	it("light/dark のキーが 25 個", () => {
+		expect(Object.keys(colorsCSS.light)).toHaveLength(25);
+		expect(Object.keys(colorsCSS.dark)).toHaveLength(25);
+	});
+
+	it("colorsCSS の値が oklch() / rgba / #FFFFFF 形式であること", () => {
+		for (const scheme of ["light", "dark"] as const) {
+			for (const [key, value] of Object.entries(colorsCSS[scheme])) {
+				expect(
+					value.startsWith("oklch(") || value.startsWith("rgba(") || value === "#FFFFFF",
+					`colorsCSS.${scheme}.${key}: ${value} は oklch() / rgba / #FFFFFF であるべき`,
+				).toBe(true);
+			}
+		}
+	});
+});
+
 describe("parseNumeric", () => {
 	it("px 値から数値を抽出する", () => {
 		expect(parseNumeric("16px")).toBe(16);
@@ -111,5 +142,10 @@ describe("generateThemeCSS", () => {
 		expect(css).toContain("@media (prefers-color-scheme: dark)");
 		expect(css).toContain("--color-background:");
 		expect(css).toContain("--color-text:");
+	});
+
+	it("generateThemeCSS() が oklch() 形式で出力されること", () => {
+		const css = generateThemeCSS();
+		expect(css).toContain("oklch(");
 	});
 });
