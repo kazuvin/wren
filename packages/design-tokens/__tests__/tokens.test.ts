@@ -17,9 +17,9 @@ describe("tokens", () => {
 		expect(Object.keys(colors.light)).toEqual(Object.keys(colors.dark));
 	});
 
-	it("colors.light/dark のキーが 25 個で一致する (25 semantic)", () => {
-		expect(Object.keys(colors.light)).toHaveLength(25);
-		expect(Object.keys(colors.dark)).toHaveLength(25);
+	it("colors.light/dark のキーが 26 個で一致する (26 semantic)", () => {
+		expect(Object.keys(colors.light)).toHaveLength(26);
+		expect(Object.keys(colors.dark)).toHaveLength(26);
 	});
 
 	it("colors の値はすべて文字列", () => {
@@ -31,11 +31,27 @@ describe("tokens", () => {
 		}
 	});
 
-	it("tabIconDefault, tabIconSelected が存在しない", () => {
-		expect(colors.light).not.toHaveProperty("tabIconDefault");
-		expect(colors.light).not.toHaveProperty("tabIconSelected");
-		expect(colors.dark).not.toHaveProperty("tabIconDefault");
-		expect(colors.dark).not.toHaveProperty("tabIconSelected");
+	it("旧トークン名が存在しない", () => {
+		const oldKeys = [
+			"surface",
+			"surfaceRaised",
+			"text",
+			"textMuted",
+			"textOnPrimary",
+			"primaryMuted",
+			"accentMuted",
+			"destructiveMuted",
+			"successMuted",
+			"warningMuted",
+			"infoMuted",
+			"borderMuted",
+			"icon",
+			"iconMuted",
+		];
+		for (const key of oldKeys) {
+			expect(colors.light).not.toHaveProperty(key);
+			expect(colors.dark).not.toHaveProperty(key);
+		}
 	});
 
 	it("spacing の値はすべて px 単位", () => {
@@ -78,17 +94,17 @@ describe("colorsCSS", () => {
 		expect(Object.keys(colorsCSS.light)).toEqual(Object.keys(colorsCSS.dark));
 	});
 
-	it("light/dark のキーが 25 個", () => {
-		expect(Object.keys(colorsCSS.light)).toHaveLength(25);
-		expect(Object.keys(colorsCSS.dark)).toHaveLength(25);
+	it("light/dark のキーが 26 個", () => {
+		expect(Object.keys(colorsCSS.light)).toHaveLength(26);
+		expect(Object.keys(colorsCSS.dark)).toHaveLength(26);
 	});
 
-	it("colorsCSS の値が oklch() / rgba / #FFFFFF 形式であること", () => {
+	it("colorsCSS の値が oklch() / rgba 形式であること", () => {
 		for (const scheme of ["light", "dark"] as const) {
 			for (const [key, value] of Object.entries(colorsCSS[scheme])) {
 				expect(
-					value.startsWith("oklch(") || value.startsWith("rgba(") || value === "#FFFFFF",
-					`colorsCSS.${scheme}.${key}: ${value} は oklch() / rgba / #FFFFFF であるべき`,
+					value.startsWith("oklch(") || value.startsWith("rgba("),
+					`colorsCSS.${scheme}.${key}: ${value} は oklch() / rgba であるべき`,
 				).toBe(true);
 			}
 		}
@@ -141,11 +157,19 @@ describe("generateThemeCSS", () => {
 		const css = generateThemeCSS();
 		expect(css).toContain("@media (prefers-color-scheme: dark)");
 		expect(css).toContain("--color-background:");
-		expect(css).toContain("--color-text:");
 	});
 
 	it("generateThemeCSS() が oklch() 形式で出力されること", () => {
 		const css = generateThemeCSS();
 		expect(css).toContain("oklch(");
+	});
+
+	it("テーマ CSS のカラーキーが kebab-case で出力される", () => {
+		const css = generateThemeCSS();
+		expect(css).toContain("--color-primary-foreground:");
+		expect(css).toContain("--color-card-foreground:");
+		expect(css).toContain("--color-muted-foreground:");
+		expect(css).not.toContain("--color-primaryForeground:");
+		expect(css).not.toContain("--color-cardForeground:");
 	});
 });

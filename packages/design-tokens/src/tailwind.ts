@@ -3,9 +3,19 @@ import { radius } from "./tokens/radius";
 import { spacing } from "./tokens/spacing";
 import { fontFamily, fontSize, fontWeight, lineHeight } from "./tokens/typography";
 
+function camelToKebab(str: string): string {
+	return str.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+}
+
 function formatEntries(entries: Record<string, string>, prefix: string): string {
 	return Object.entries(entries)
 		.map(([key, value]) => `\t--${prefix}-${key}: ${value};`)
+		.join("\n");
+}
+
+function formatColorEntries(entries: Record<string, string>): string {
+	return Object.entries(entries)
+		.map(([key, value]) => `\t--color-${camelToKebab(key)}: ${value};`)
 		.join("\n");
 }
 
@@ -27,7 +37,7 @@ export function generateThemeCSS(): string {
 	lines.push(formatEntries(radius, "radius"));
 	lines.push("");
 	lines.push("\t/* Light theme colors (default) */");
-	lines.push(formatEntries(colorsCSS.light, "color"));
+	lines.push(formatColorEntries(colorsCSS.light));
 	lines.push("}");
 
 	lines.push("");
@@ -36,7 +46,7 @@ export function generateThemeCSS(): string {
 	lines.push("@media (prefers-color-scheme: dark) {");
 	lines.push("\t:root {");
 	for (const [key, value] of Object.entries(colorsCSS.dark)) {
-		lines.push(`\t\t--color-${key}: ${value};`);
+		lines.push(`\t\t--color-${camelToKebab(key)}: ${value};`);
 	}
 	lines.push("\t}");
 	lines.push("}");

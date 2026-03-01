@@ -16,10 +16,10 @@ export function Input({ editable = true, style, ...props }: InputProps) {
 			role="textbox"
 			editable={editable}
 			aria-disabled={!editable}
-			placeholderTextColor={theme.textMuted}
+			placeholderTextColor={theme.mutedForeground}
 			style={[
 				styles.base,
-				{ backgroundColor: theme.surface, color: theme.text },
+				{ backgroundColor: theme.secondary, color: theme.foreground },
 				!editable && styles.disabled,
 				style,
 			]}

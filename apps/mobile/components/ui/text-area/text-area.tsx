@@ -19,11 +19,11 @@ export function TextArea({ editable = true, rows = 3, style, ...props }: TextAre
 			multiline
 			editable={editable}
 			aria-disabled={!editable}
-			placeholderTextColor={theme.textMuted}
+			placeholderTextColor={theme.mutedForeground}
 			textAlignVertical="top"
 			style={[
 				styles.base,
-				{ backgroundColor: theme.surface, color: theme.text, minHeight },
+				{ backgroundColor: theme.secondary, color: theme.foreground, minHeight },
 				!editable && styles.disabled,
 				style,
 			]}

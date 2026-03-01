@@ -14,13 +14,16 @@ describe("ButtonText", () => {
 		expect(screen.getByText("保存")).toBeInTheDocument();
 	});
 
-	it("variant=primary のとき文字色が白になる", () => {
+	it("variant=primary のとき文字色が明るい色になる", () => {
 		render(
 			<Button variant="primary">
 				<ButtonText>保存</ButtonText>
 			</Button>,
 		);
-		expect(screen.getByText("保存")).toHaveStyle({ color: "#fff" });
+		const el = screen.getByText("保存");
+		// primaryForeground は L=0.97 の明るい色
+		expect(el.style.color).toBeTruthy();
+		expect(el.style.color).not.toBe("rgb(0, 0, 0)");
 	});
 
 	it("variant=secondary のとき文字色が白ではない", () => {

@@ -65,7 +65,7 @@ function getVariantStyle(variant: Variant, theme: (typeof colors)["light"]): Vie
 		case "primary":
 			return { backgroundColor: theme.primary };
 		case "secondary":
-			return { backgroundColor: theme.surfaceRaised };
+			return { backgroundColor: theme.card };
 		case "outline":
 			return {
 				backgroundColor: "transparent",
@@ -81,9 +81,9 @@ function getVariantStyle(variant: Variant, theme: (typeof colors)["light"]): Vie
 function getSpinnerColor(variant: Variant, theme: (typeof colors)["light"]): string {
 	switch (variant) {
 		case "primary":
-			return theme.textOnPrimary;
+			return theme.primaryForeground;
 		case "secondary":
-			return theme.text;
+			return theme.foreground;
 		case "outline":
 		case "ghost":
 			return theme.primary;

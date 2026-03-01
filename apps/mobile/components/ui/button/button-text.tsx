@@ -24,9 +24,9 @@ function getTextColor(
 ): string {
 	switch (variant) {
 		case "primary":
-			return theme.textOnPrimary;
+			return theme.primaryForeground;
 		case "secondary":
-			return theme.text;
+			return theme.foreground;
 		case "outline":
 			return theme.primary;
 		case "ghost":

@@ -62,11 +62,11 @@ export function DatePicker({
 			<Pressable
 				testID={testID}
 				onPress={() => setIsOpen((v) => !v)}
-				style={[styles.trigger, { backgroundColor: theme.surface, color: theme.text }]}
+				style={[styles.trigger, { backgroundColor: theme.secondary, color: theme.foreground }]}
 			>
 				<Text
 					style={{
-						color: value ? theme.text : theme.textMuted,
+						color: value ? theme.foreground : theme.mutedForeground,
 						fontSize: parseNumeric(fontSize.base),
 					}}
 				>
@@ -79,16 +79,16 @@ export function DatePicker({
 					{/* Header */}
 					<View style={styles.header}>
 						<Pressable onPress={handlePrevMonth}>
-							<IconSymbol name="chevron.left" size={20} color={theme.text} />
+							<IconSymbol name="chevron.left" size={20} color={theme.foreground} />
 						</Pressable>
 						<Text
 							testID="date-picker-header-label"
-							style={{ color: theme.text, fontSize: parseNumeric(fontSize.base) }}
+							style={{ color: theme.foreground, fontSize: parseNumeric(fontSize.base) }}
 						>
 							{displayYear}年{displayMonth + 1}月
 						</Text>
 						<Pressable onPress={handleNextMonth}>
-							<IconSymbol name="chevron.right" size={20} color={theme.text} />
+							<IconSymbol name="chevron.right" size={20} color={theme.foreground} />
 						</Pressable>
 					</View>
 
@@ -96,7 +96,7 @@ export function DatePicker({
 					<View style={styles.weekRow}>
 						{WEEKDAY_LABELS.map((label) => (
 							<View key={label} style={styles.dayCell}>
-								<Text style={{ color: theme.text, fontSize: parseNumeric(fontSize.base) }}>
+								<Text style={{ color: theme.foreground, fontSize: parseNumeric(fontSize.base) }}>
 									{label}
 								</Text>
 							</View>
@@ -119,7 +119,7 @@ export function DatePicker({
 									>
 										<Text
 											style={{
-												color: isSelected ? theme.textOnPrimary : theme.text,
+												color: isSelected ? theme.primaryForeground : theme.foreground,
 												opacity: day.isCurrentMonth ? 1 : 0.3,
 												fontSize: parseNumeric(fontSize.base),
 											}}

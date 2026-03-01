@@ -62,9 +62,11 @@ export function TimePicker({ value, onValueChange, placeholder, testID }: TimePi
 			<Pressable
 				testID={testID ?? "time-picker-trigger"}
 				onPress={handleToggle}
-				style={[styles.trigger, { backgroundColor: theme.surface }]}
+				style={[styles.trigger, { backgroundColor: theme.secondary }]}
 			>
-				<Text style={[styles.triggerText, { color: value ? theme.text : theme.textMuted }]}>
+				<Text
+					style={[styles.triggerText, { color: value ? theme.foreground : theme.mutedForeground }]}
+				>
 					{value ?? placeholder}
 				</Text>
 			</Pressable>
@@ -86,7 +88,7 @@ export function TimePicker({ value, onValueChange, placeholder, testID }: TimePi
 								fontWeight: "600",
 								textAlign: "center",
 								marginBottom: parseNumeric(spacing[2]),
-								color: theme.text,
+								color: theme.foreground,
 							}}
 						>
 							時
@@ -110,7 +112,7 @@ export function TimePicker({ value, onValueChange, placeholder, testID }: TimePi
 										<Text
 											style={{
 												...textBase,
-												color: isSelected ? theme.textOnPrimary : theme.text,
+												color: isSelected ? theme.primaryForeground : theme.foreground,
 											}}
 										>
 											{hh}
@@ -129,7 +131,7 @@ export function TimePicker({ value, onValueChange, placeholder, testID }: TimePi
 								fontWeight: "600",
 								textAlign: "center",
 								marginBottom: parseNumeric(spacing[2]),
-								color: theme.text,
+								color: theme.foreground,
 							}}
 						>
 							分
@@ -153,7 +155,7 @@ export function TimePicker({ value, onValueChange, placeholder, testID }: TimePi
 										<Text
 											style={{
 												...textBase,
-												color: isSelected ? theme.textOnPrimary : theme.text,
+												color: isSelected ? theme.primaryForeground : theme.foreground,
 											}}
 										>
 											{mm}

@@ -18,7 +18,7 @@ export function Badge({ label, selected = false, color, onPress, testID }: Badge
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
 
-	const bgColor = color ?? theme.text;
+	const bgColor = color ?? theme.foreground;
 
 	return (
 		<AnimatedPressable
@@ -26,10 +26,10 @@ export function Badge({ label, selected = false, color, onPress, testID }: Badge
 			accessibilityRole="button"
 			aria-selected={selected}
 			onPress={onPress}
-			style={[styles.outer, selected && { borderColor: theme.textMuted }]}
+			style={[styles.outer, selected && { borderColor: theme.mutedForeground }]}
 		>
 			<View style={[styles.inner, { backgroundColor: bgColor }]}>
-				<Text style={[styles.label, { color: color ? theme.text : theme.textOnPrimary }]}>
+				<Text style={[styles.label, { color: color ? theme.foreground : theme.primaryForeground }]}>
 					{label}
 				</Text>
 			</View>

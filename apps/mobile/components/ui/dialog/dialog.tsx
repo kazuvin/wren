@@ -174,7 +174,7 @@ function DragHandle() {
 	const theme = colors[scheme];
 	return (
 		<View testID="dialog-drag-handle" style={styles.dragHandleContainer}>
-			<View style={[styles.dragHandle, { backgroundColor: theme.borderMuted }]} />
+			<View style={[styles.dragHandle, { backgroundColor: theme.border }]} />
 		</View>
 	);
 }
@@ -186,7 +186,9 @@ function DialogTitle({ children, style }: { children: ReactNode; style?: TextSty
 function DialogDescription({ children, style }: { children: ReactNode; style?: TextStyle }) {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	return <Text style={[styles.description, { color: theme.textMuted }, style]}>{children}</Text>;
+	return (
+		<Text style={[styles.description, { color: theme.mutedForeground }, style]}>{children}</Text>
+	);
 }
 
 function DialogClose({ style }: { style?: ViewStyle } = {}) {
@@ -198,9 +200,9 @@ function DialogClose({ style }: { style?: ViewStyle } = {}) {
 			testID="dialog-close"
 			accessibilityRole="button"
 			onPress={onClose}
-			style={[styles.closeButton, { backgroundColor: `${theme.icon}1F` }, style]}
+			style={[styles.closeButton, { backgroundColor: `${theme.mutedForeground}1F` }, style]}
 		>
-			<IconSymbol name="xmark" size={16} color={theme.icon} />
+			<IconSymbol name="xmark" size={16} color={theme.mutedForeground} />
 		</Pressable>
 	);
 }
@@ -211,7 +213,7 @@ function DialogHeader({ children, style }: { children: ReactNode; style?: ViewSt
 	return (
 		<View
 			testID="dialog-header"
-			style={[styles.header, { borderBottomColor: theme.borderMuted }, style]}
+			style={[styles.header, { borderBottomColor: theme.border }, style]}
 		>
 			{children}
 		</View>

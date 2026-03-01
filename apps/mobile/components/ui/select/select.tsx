@@ -49,24 +49,27 @@ export function Select({
 			<Pressable
 				testID={testID}
 				onPress={handleTriggerPress}
-				style={[styles.trigger, { backgroundColor: theme.surface }]}
+				style={[styles.trigger, { backgroundColor: theme.secondary }]}
 				disabled={disabled}
 			>
 				<Text
 					style={[
 						styles.triggerText,
 						{
-							color: selectedOption ? theme.text : theme.textMuted,
+							color: selectedOption ? theme.foreground : theme.mutedForeground,
 						},
 					]}
 				>
 					{selectedOption ? selectedOption.label : placeholder}
 				</Text>
-				<IconSymbol name="chevron.down" size={16} color={theme.icon} />
+				<IconSymbol name="chevron.down" size={16} color={theme.mutedForeground} />
 			</Pressable>
 
 			{isOpen && (
-				<View testID="select-options" style={[styles.options, { backgroundColor: theme.surface }]}>
+				<View
+					testID="select-options"
+					style={[styles.options, { backgroundColor: theme.secondary }]}
+				>
 					{options.map((option) => (
 						<Pressable
 							key={option.value}
@@ -79,7 +82,7 @@ export function Select({
 									style={[styles.colorDot, { backgroundColor: option.color }]}
 								/>
 							)}
-							<Text style={{ ...textBase, color: theme.text }}>{option.label}</Text>
+							<Text style={{ ...textBase, color: theme.foreground }}>{option.label}</Text>
 						</Pressable>
 					))}
 				</View>

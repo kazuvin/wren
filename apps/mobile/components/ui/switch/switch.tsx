@@ -16,13 +16,13 @@ export function Switch({ value, onValueChange, disabled = false, label, testID }
 
 	return (
 		<View style={styles.container}>
-			{label ? <Text style={[styles.label, { color: theme.text }]}>{label}</Text> : null}
+			{label ? <Text style={[styles.label, { color: theme.foreground }]}>{label}</Text> : null}
 			<RNSwitch
 				value={value}
 				onValueChange={onValueChange}
 				disabled={disabled}
 				aria-disabled={disabled}
-				trackColor={{ false: theme.surface, true: theme.primary }}
+				trackColor={{ false: theme.secondary, true: theme.primary }}
 				testID={testID}
 			/>
 		</View>

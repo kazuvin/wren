@@ -38,7 +38,7 @@ describe("Badge", () => {
 			expect(screen.getByTestId("badge")).toBeInTheDocument();
 		});
 
-		it("color を指定しないと theme.surface が背景になる", () => {
+		it("color を指定しないと theme.foreground が背景になる", () => {
 			render(<Badge label="すべて" testID="badge" onPress={() => {}} />);
 			expect(screen.getByTestId("badge")).toBeInTheDocument();
 		});
