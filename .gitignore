@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.turbo/
+
+# Expo
+apps/mobile/.expo/
+
+# Build outputs
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code local settings
+.claude/
+
+# OS
+.DS_Store

@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm:*)",
+      "Skill(valibot-patterns)",
+      "Skill(ci)",
+      "Skill(component-common)",
+      "Skill(component-creator-mobile)",
+      "Skill(task)",
+      "Bash(/ci)",
+      "Skill(jotai-patterns)",
+      "Skill(tdd-patterns)",
+      "Bash(xargs cat:*)",
+      "Skill(design-tokens)",
+      "Skill(reanimated-patterns)",
+      "Bash(git:*)"
+    ]
+  }
+}
