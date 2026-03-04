@@ -1,6 +1,6 @@
-# Container コンポーネント (Features + Jotai)
+# Container コンポーネント (Features + Zustand)
 
-Atom 設計: **jotai-patterns** スキルを参照。
+Store 設計: **zustand-pattern** スキルを参照。
 
 ## ディレクトリ構成
 
@@ -8,7 +8,7 @@ Atom 設計: **jotai-patterns** スキルを参照。
 features/{feature}/
 ├── components/     # 機能 UI
 ├── schemas/        # Valibot スキーマ (valibot-patterns 参照)
-├── stores/         # Jotai atoms
+├── stores/         # Zustand stores
 ├── hooks/          # カスタムフック (オプション)
 ├── types/          # スキーマから導出できない型のみ
 └── index.ts        # 公開 API
@@ -17,14 +17,13 @@ features/{feature}/
 ## テンプレート
 
 ```tsx
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAuthStore } from "../stores/auth-store";
 import { LoginFormPresentation } from "@/components/auth/login-form";
-import { isLoadingAtom, errorValueAtom, loginAtom } from "../stores/auth-atoms";
 
 export function LoginFormContainer() {
-  const isLoading = useAtomValue(isLoadingAtom);
-  const error = useAtomValue(errorValueAtom);
-  const login = useSetAtom(loginAtom);
+  const isLoading = useAuthStore((s) => s.isLoading);
+  const error = useAuthStore((s) => s.error);
+  const login = useAuthStore((s) => s.login);
 
   return (
     <LoginFormPresentation
@@ -42,7 +41,7 @@ export function LoginFormContainer() {
 // features/auth/index.ts
 export { LoginFormContainer } from "./components/login-form";
 export { useAuth } from "./hooks/use-auth";
-export { isAuthenticatedAtom, userValueAtom } from "./stores/auth-atoms";
+export { useAuthStore } from "./stores/auth-store";
 export type { User, LoginCredentials } from "./types";
 ```
 
@@ -51,5 +50,5 @@ export type { User, LoginCredentials } from "./types";
 1. コロケーション: components, stores, hooks, types を feature フォルダ内に配置
 2. Container/Presentation 分離
 3. 必要なものだけをエクスポート
-4. Container は hooks を使い、Presentation に props で渡す
-5. Atom のカプセル化: **jotai-patterns** に従う
+4. Container は Store からセレクタで必要な state のみ取得し、Presentation に props で渡す
+5. Store のセレクタ: **zustand-pattern** に従う

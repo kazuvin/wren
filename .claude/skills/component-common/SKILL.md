@@ -1,6 +1,6 @@
 ---
 name: component-common
-description: コンポーネント設計の共通パターン。Presentation/Container の判断基準、命名規則、ディレクトリ構成、Jotai Container パターンを定義。プラットフォーム固有の実装は component-creator-mobile スキルを参照。
+description: コンポーネント設計の共通パターン。Presentation/Container の判断基準、命名規則、ディレクトリ構成、Zustand Container パターンを定義。プラットフォーム固有の実装は component-creator-mobile スキルを参照。
 ---
 
 # コンポーネント共通パターン
@@ -9,7 +9,7 @@ description: コンポーネント設計の共通パターン。Presentation/Con
 
 関連スキル:
 - **component-creator-mobile**: React Native / Expo 固有の実装パターン
-- **jotai-patterns**: Container 用の Atom 設計
+- **zustand-pattern**: Container 用の Store 設計
 - **valibot-patterns**: スキーマ定義とバリデーション
 
 ## 判断ガイド
@@ -21,7 +21,7 @@ description: コンポーネント設計の共通パターン。Presentation/Con
 | Login form with auth logic    | Container    | `features/auth/`       |
 | Dashboard with data fetch     | Container    | `features/dashboard/`  |
 
-**ルール**: Jotai atoms または API 呼び出し → Container。純粋な UI → Presentation。
+**ルール**: Zustand Store または API 呼び出し → Container。純粋な UI → Presentation。
 
 ## 命名規則
 
@@ -47,7 +47,7 @@ components/
 features/{feature}/
 ├── components/     # 機能 UI
 ├── schemas/        # Valibot スキーマ (valibot-patterns 参照)
-├── stores/         # Jotai atoms
+├── stores/         # Zustand stores
 ├── hooks/          # カスタムフック (オプション)
 ├── types/          # スキーマから導出できない型のみ
 └── index.ts        # 公開 API
