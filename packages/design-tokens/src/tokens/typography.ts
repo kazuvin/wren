@@ -1,5 +1,5 @@
 export const fontFamily = {
-	sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+	sans: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
 	mono: "SFMono-Regular, Menlo, Monaco, Consolas, monospace",
 } as const;
 
