@@ -8,7 +8,7 @@
       "Skill(component-creator-mobile)",
       "Skill(task)",
       "Bash(/ci)",
-      "Skill(jotai-patterns)",
+      "Skill(zustand-pattern)",
       "Skill(tdd-patterns)",
       "Bash(xargs cat:*)",
       "Skill(design-tokens)",

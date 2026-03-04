@@ -16,7 +16,7 @@
 | 純粋な計算   | `utils/`    | React に依存しない。テストが容易              |
 | バリデーション | `schemas/` | Valibot スキーマで定義（valibot-patterns 参照） |
 | 状態を持つ   | `hooks/`    | `useState` / `useEffect` が必要              |
-| Atom 操作    | `stores/`   | Jotai の atom として定義（jotai-patterns 参照） |
+| Store 操作   | `stores/`   | Zustand の Store として定義（zustand-pattern 参照） |
 
 ## パターン
 

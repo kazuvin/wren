@@ -55,4 +55,4 @@ export type { User, LoginCredentials } from "./types";
 1. 型付きバリアント (union types、マジックストリング禁止)
 2. オプション props には適切なデフォルト値
 3. Presentation コンポーネントにビジネスロジック・API 呼び出し禁止
-4. Presentation コンポーネントにグローバル状態 (Jotai, Context) 禁止
+4. Presentation コンポーネントにグローバル状態 (Zustand, Context) 禁止
