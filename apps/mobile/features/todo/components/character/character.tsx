@@ -1,13 +1,19 @@
 import { colors, parseNumeric, spacing } from "@wren/design-tokens";
 import { StyleSheet, Text, View, useColorScheme } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { type AnimatedStyle } from "react-native-reanimated";
 import { textBase } from "../../../../constants/theme";
-import { useCharacter } from "../../hooks/use-character";
+import type { CharacterLevel } from "../../utils/character-level";
 
-export function Character() {
+type CharacterProps = {
+	face: string;
+	level: CharacterLevel;
+	remaining: number | null;
+	animatedStyle: AnimatedStyle;
+};
+
+export function Character({ face, level, remaining, animatedStyle }: CharacterProps) {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const { face, level, remaining, animatedStyle } = useCharacter();
 
 	return (
 		<View style={styles.container}>

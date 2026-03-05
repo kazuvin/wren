@@ -1,8 +1,12 @@
 export { Character } from "./components/character";
+export { CharacterContainer } from "./components/character";
 export { AddTodoFab } from "./components/add-todo-fab";
 export { TodoList } from "./components/todo-list";
+export { TodoListContainer } from "./components/todo-list";
 export { TodoItem } from "./components/todo-item";
+export { TodoItemContainer } from "./components/todo-item";
 export { DraggableTodoItem } from "./components/todo-item";
+export { DraggableTodoItemContainer } from "./components/todo-item";
 export { useTodoStore } from "./stores/todo-store";
 export type { Todo } from "./stores/todo-store";
 export { getCompletedCount } from "./stores/todo-store";

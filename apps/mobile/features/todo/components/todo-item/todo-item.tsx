@@ -3,22 +3,21 @@ import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native"
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { textBase } from "../../../../constants/theme";
 import type { Todo } from "../../stores/todo-store";
-import { useTodoStore } from "../../stores/todo-store";
 
 type TodoItemProps = {
 	todo: Todo;
+	onToggle: (id: string) => void;
 };
 
-export function TodoItem({ todo }: TodoItemProps) {
+export function TodoItem({ todo, onToggle }: TodoItemProps) {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const toggleTodo = useTodoStore((s) => s.toggleTodo);
 
 	return (
 		<Animated.View entering={FadeIn} exiting={FadeOut}>
 			<Pressable
 				style={[styles.container, { backgroundColor: theme.card, borderColor: theme.border }]}
-				onPress={() => toggleTodo(todo.id)}
+				onPress={() => onToggle(todo.id)}
 				accessibilityRole="checkbox"
 				accessibilityState={{ checked: todo.completed }}
 			>
