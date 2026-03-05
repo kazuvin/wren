@@ -1,8 +1,9 @@
 import { colors, parseNumeric, radius, spacing } from "@wren/design-tokens";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { textBase } from "../../../constants/theme";
-import { type Todo, useTodoStore } from "../../../stores/todo-store";
+import { textBase } from "../../../../constants/theme";
+import type { Todo } from "../../stores/todo-store";
+import { useTodoStore } from "../../stores/todo-store";
 
 type TodoItemProps = {
 	todo: Todo;

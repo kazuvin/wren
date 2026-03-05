@@ -1,30 +1,13 @@
 import { colors, parseNumeric, spacing } from "@wren/design-tokens";
-import { useEffect } from "react";
 import { StyleSheet, Text, View, useColorScheme } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { textBase } from "../../../constants/theme";
-import { getCompletedCount, useTodoStore } from "../../../stores/todo-store";
-import { getCharacterLevel, getCharacterScale } from "../../../utils/character-level";
-
-const CHARACTER_FACES = ["🥚", "🐣", "🐥", "🐔"];
+import Animated from "react-native-reanimated";
+import { textBase } from "../../../../constants/theme";
+import { useCharacter } from "../../hooks/use-character";
 
 export function Character() {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const completedCount = useTodoStore((s) => getCompletedCount(s.todos));
-	const level = getCharacterLevel(completedCount);
-	const targetScale = getCharacterScale(completedCount);
-	const scale = useSharedValue(targetScale);
-
-	useEffect(() => {
-		scale.value = withTiming(targetScale, { duration: 500 });
-	}, [targetScale, scale]);
-
-	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: scale.value }],
-	}));
-
-	const face = CHARACTER_FACES[level.level - 1];
+	const { face, level, remaining, animatedStyle } = useCharacter();
 
 	return (
 		<View style={styles.container}>
@@ -34,9 +17,9 @@ export function Character() {
 			<Text style={[styles.levelText, { color: theme.mutedForeground }]}>
 				Lv.{level.level} {level.name}
 			</Text>
-			{level.requiredForNext !== null && (
+			{remaining !== null && (
 				<Text style={[styles.progressText, { color: theme.mutedForeground }]}>
-					次のレベルまで あと {level.requiredForNext - completedCount} 個
+					次のレベルまで あと {remaining} 個
 				</Text>
 			)}
 		</View>

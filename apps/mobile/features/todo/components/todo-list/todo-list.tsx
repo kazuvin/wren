@@ -1,18 +1,13 @@
 import { colors, parseNumeric, spacing } from "@wren/design-tokens";
 import { StyleSheet, Text, View, useColorScheme } from "react-native";
-import { textBase } from "../../../constants/theme";
-import { useTodoStore } from "../../../stores/todo-store";
+import { textBase } from "../../../../constants/theme";
+import { useTodoList } from "../../hooks/use-todo-list";
 import { DraggableTodoItem } from "../todo-item/draggable-todo-item";
 
 export function TodoList() {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const todos = useTodoStore((s) => s.todos);
-	const reorderTodos = useTodoStore((s) => s.reorderTodos);
-
-	const handleReorder = (fromIndex: number, toIndex: number) => {
-		reorderTodos({ fromIndex, toIndex });
-	};
+	const { todos, handleReorder } = useTodoList();
 
 	return (
 		<View style={styles.container}>
