@@ -18,7 +18,10 @@ export default function RootLayout() {
 					<JotaiProvider>
 						<Stack>
 							<Stack.Screen name="index" options={{ headerShown: false }} />
-							<Stack.Screen name="modal" options={{ presentation: "modal", title: "Modal" }} />
+							<Stack.Screen
+								name="modal"
+								options={{ presentation: "modal", title: "タスクを追加" }}
+							/>
 						</Stack>
 					</JotaiProvider>
 					<StatusBar style="auto" />
