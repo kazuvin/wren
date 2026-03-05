@@ -1,16 +1,11 @@
 import { colors, parseNumeric, radius, spacing } from "@wren/design-tokens";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, {
-	runOnJS,
-	useAnimatedStyle,
-	useSharedValue,
-	withTiming,
-} from "react-native-reanimated";
-import { textBase } from "../../../constants/theme";
-import { type Todo, useTodoStore } from "../../../stores/todo-store";
-
-const ITEM_HEIGHT = 56;
+import { GestureDetector } from "react-native-gesture-handler";
+import Animated from "react-native-reanimated";
+import { textBase } from "../../../../constants/theme";
+import { useDragReorder } from "../../hooks/use-drag-reorder";
+import type { Todo } from "../../stores/todo-store";
+import { useTodoStore } from "../../stores/todo-store";
 
 type DraggableTodoItemProps = {
 	todo: Todo;
@@ -23,37 +18,7 @@ export function DraggableTodoItem({ todo, index, totalCount, onReorder }: Dragga
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
 	const toggleTodo = useTodoStore((s) => s.toggleTodo);
-	const translateY = useSharedValue(0);
-	const isActive = useSharedValue(false);
-	const zIndex = useSharedValue(0);
-
-	const panGesture = Gesture.Pan()
-		.activeOffsetY([-10, 10])
-		.onStart(() => {
-			isActive.value = true;
-			zIndex.value = 100;
-		})
-		.onUpdate((e) => {
-			translateY.value = e.translationY;
-		})
-		.onEnd(() => {
-			const movedPositions = Math.round(translateY.value / ITEM_HEIGHT);
-			const newIndex = Math.max(0, Math.min(totalCount - 1, index + movedPositions));
-
-			if (newIndex !== index) {
-				runOnJS(onReorder)(index, newIndex);
-			}
-
-			translateY.value = withTiming(0, { duration: 200 });
-			isActive.value = false;
-			zIndex.value = 0;
-		});
-
-	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ translateY: translateY.value }],
-		zIndex: zIndex.value,
-		opacity: isActive.value ? 0.9 : 1,
-	}));
+	const { panGesture, animatedStyle } = useDragReorder({ index, totalCount, onReorder });
 
 	return (
 		<GestureDetector gesture={panGesture}>
@@ -102,7 +67,7 @@ const styles = StyleSheet.create({
 		borderRadius: parseNumeric(radius.xl),
 		borderWidth: 1,
 		gap: parseNumeric(spacing[2]),
-		height: ITEM_HEIGHT,
+		height: 56,
 	},
 	dragHandle: {
 		fontSize: 16,

@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { textBase } from "@/constants/theme";
-import { useTodoStore } from "@/stores/todo-store";
+import { useTodoStore } from "@/features/todo";
 import { colors, parseNumeric, radius, spacing } from "@wren/design-tokens";
 import { router } from "expo-router";
 import { useState } from "react";

@@ -1,6 +1,4 @@
-import { AddTodoFab } from "@/components/todo/add-todo-fab";
-import { Character } from "@/components/todo/character";
-import { TodoList } from "@/components/todo/todo-list";
+import { AddTodoFab, Character, TodoList } from "@/features/todo";
 import { colors, parseNumeric, spacing } from "@wren/design-tokens";
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, View, useColorScheme } from "react-native";
