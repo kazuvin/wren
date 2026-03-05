@@ -1,9 +1,8 @@
 import { Input } from "@/components/ui/input";
 import { textBase } from "@/constants/theme";
-import { addTodoAtom } from "@/stores/todo-store";
+import { useTodoStore } from "@/stores/todo-store";
 import { colors, parseNumeric, radius, spacing } from "@wren/design-tokens";
 import { router } from "expo-router";
-import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
 
@@ -12,7 +11,7 @@ const EMOJI_OPTIONS = ["📝", "😊", "🌱", "🛁", "🍳", "💪", "📚", "
 export default function AddTodoModal() {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const addTodo = useSetAtom(addTodoAtom);
+	const addTodo = useTodoStore((s) => s.addTodo);
 	const [title, setTitle] = useState("");
 	const [selectedEmoji, setSelectedEmoji] = useState("📝");
 

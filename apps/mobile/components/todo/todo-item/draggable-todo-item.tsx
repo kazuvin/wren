@@ -1,5 +1,4 @@
 import { colors, parseNumeric, radius, spacing } from "@wren/design-tokens";
-import { useSetAtom } from "jotai";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -9,8 +8,7 @@ import Animated, {
 	withTiming,
 } from "react-native-reanimated";
 import { textBase } from "../../../constants/theme";
-import type { Todo } from "../../../stores/todo-store";
-import { toggleTodoAtom } from "../../../stores/todo-store";
+import { type Todo, useTodoStore } from "../../../stores/todo-store";
 
 const ITEM_HEIGHT = 56;
 
@@ -24,7 +22,7 @@ type DraggableTodoItemProps = {
 export function DraggableTodoItem({ todo, index, totalCount, onReorder }: DraggableTodoItemProps) {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const toggleTodo = useSetAtom(toggleTodoAtom);
+	const toggleTodo = useTodoStore((s) => s.toggleTodo);
 	const translateY = useSharedValue(0);
 	const isActive = useSharedValue(false);
 	const zIndex = useSharedValue(0);

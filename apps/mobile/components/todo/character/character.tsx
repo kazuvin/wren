@@ -1,10 +1,9 @@
 import { colors, parseNumeric, spacing } from "@wren/design-tokens";
-import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { StyleSheet, Text, View, useColorScheme } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { textBase } from "../../../constants/theme";
-import { completedCountAtom } from "../../../stores/todo-store";
+import { getCompletedCount, useTodoStore } from "../../../stores/todo-store";
 import { getCharacterLevel, getCharacterScale } from "../../../utils/character-level";
 
 const CHARACTER_FACES = ["🥚", "🐣", "🐥", "🐔"];
@@ -12,7 +11,7 @@ const CHARACTER_FACES = ["🥚", "🐣", "🐥", "🐔"];
 export function Character() {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const completedCount = useAtomValue(completedCountAtom);
+	const completedCount = useTodoStore((s) => getCompletedCount(s.todos));
 	const level = getCharacterLevel(completedCount);
 	const targetScale = getCharacterScale(completedCount);
 	const scale = useSharedValue(targetScale);

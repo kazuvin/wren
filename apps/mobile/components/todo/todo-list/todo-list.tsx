@@ -1,18 +1,17 @@
 import { colors, parseNumeric, spacing } from "@wren/design-tokens";
-import { useAtomValue, useSetAtom } from "jotai";
 import { StyleSheet, Text, View, useColorScheme } from "react-native";
 import { textBase } from "../../../constants/theme";
-import { reorderTodosAtom, todosAtom } from "../../../stores/todo-store";
+import { useTodoStore } from "../../../stores/todo-store";
 import { DraggableTodoItem } from "../todo-item/draggable-todo-item";
 
 export function TodoList() {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const todos = useAtomValue(todosAtom);
-	const reorder = useSetAtom(reorderTodosAtom);
+	const todos = useTodoStore((s) => s.todos);
+	const reorderTodos = useTodoStore((s) => s.reorderTodos);
 
 	const handleReorder = (fromIndex: number, toIndex: number) => {
-		reorder({ fromIndex, toIndex });
+		reorderTodos({ fromIndex, toIndex });
 	};
 
 	return (

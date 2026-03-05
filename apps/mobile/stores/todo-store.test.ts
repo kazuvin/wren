@@ -1,33 +1,22 @@
-import { createStore } from "jotai";
-import { describe, expect, it } from "vitest";
-import {
-	type Todo,
-	addTodoAtom,
-	completedCountAtom,
-	removeTodoAtom,
-	reorderTodosAtom,
-	todosAtom,
-	toggleTodoAtom,
-} from "./todo-store";
-
-function createTestStore() {
-	return createStore();
-}
+import { beforeEach, describe, expect, it } from "vitest";
+import { type Todo, getCompletedCount, useTodoStore } from "./todo-store";
 
 describe("todo-store", () => {
-	describe("todosAtom", () => {
+	beforeEach(() => {
+		useTodoStore.setState({ todos: [] });
+	});
+
+	describe("todos", () => {
 		it("初期値は空配列", () => {
-			const store = createTestStore();
-			expect(store.get(todosAtom)).toEqual([]);
+			expect(useTodoStore.getState().todos).toEqual([]);
 		});
 	});
 
-	describe("addTodoAtom", () => {
+	describe("addTodo", () => {
 		it("タスクを追加できる", () => {
-			const store = createTestStore();
-			store.set(addTodoAtom, { title: "お風呂沸かす", emoji: "😊" });
+			useTodoStore.getState().addTodo({ title: "お風呂沸かす", emoji: "😊" });
 
-			const todos = store.get(todosAtom);
+			const todos = useTodoStore.getState().todos;
 			expect(todos).toHaveLength(1);
 			expect(todos[0].title).toBe("お風呂沸かす");
 			expect(todos[0].emoji).toBe("😊");
@@ -35,95 +24,87 @@ describe("todo-store", () => {
 		});
 
 		it("複数のタスクを追加できる", () => {
-			const store = createTestStore();
-			store.set(addTodoAtom, { title: "お風呂沸かす", emoji: "😊" });
-			store.set(addTodoAtom, { title: "水やり", emoji: "🌱" });
+			useTodoStore.getState().addTodo({ title: "お風呂沸かす", emoji: "😊" });
+			useTodoStore.getState().addTodo({ title: "水やり", emoji: "🌱" });
 
-			const todos = store.get(todosAtom);
+			const todos = useTodoStore.getState().todos;
 			expect(todos).toHaveLength(2);
 			expect(todos[0].title).toBe("お風呂沸かす");
 			expect(todos[1].title).toBe("水やり");
 		});
 
 		it("emoji を省略するとデフォルト絵文字が使われる", () => {
-			const store = createTestStore();
-			store.set(addTodoAtom, { title: "テスト" });
+			useTodoStore.getState().addTodo({ title: "テスト" });
 
-			const todos = store.get(todosAtom);
+			const todos = useTodoStore.getState().todos;
 			expect(todos[0].emoji).toBe("📝");
 		});
 	});
 
-	describe("toggleTodoAtom", () => {
+	describe("toggleTodo", () => {
 		it("タスクの完了状態をトグルできる", () => {
-			const store = createTestStore();
-			store.set(addTodoAtom, { title: "テスト" });
+			useTodoStore.getState().addTodo({ title: "テスト" });
 
-			const todoId = store.get(todosAtom)[0].id;
-			store.set(toggleTodoAtom, todoId);
+			const todoId = useTodoStore.getState().todos[0].id;
+			useTodoStore.getState().toggleTodo(todoId);
 
-			expect(store.get(todosAtom)[0].completed).toBe(true);
+			expect(useTodoStore.getState().todos[0].completed).toBe(true);
 		});
 
 		it("完了済みタスクを未完了に戻せる", () => {
-			const store = createTestStore();
-			store.set(addTodoAtom, { title: "テスト" });
+			useTodoStore.getState().addTodo({ title: "テスト" });
 
-			const todoId = store.get(todosAtom)[0].id;
-			store.set(toggleTodoAtom, todoId);
-			store.set(toggleTodoAtom, todoId);
+			const todoId = useTodoStore.getState().todos[0].id;
+			useTodoStore.getState().toggleTodo(todoId);
+			useTodoStore.getState().toggleTodo(todoId);
 
-			expect(store.get(todosAtom)[0].completed).toBe(false);
+			expect(useTodoStore.getState().todos[0].completed).toBe(false);
 		});
 	});
 
-	describe("removeTodoAtom", () => {
+	describe("removeTodo", () => {
 		it("タスクを削除できる", () => {
-			const store = createTestStore();
-			store.set(addTodoAtom, { title: "タスク1" });
-			store.set(addTodoAtom, { title: "タスク2" });
+			useTodoStore.getState().addTodo({ title: "タスク1" });
+			useTodoStore.getState().addTodo({ title: "タスク2" });
 
-			const todoId = store.get(todosAtom)[0].id;
-			store.set(removeTodoAtom, todoId);
+			const todoId = useTodoStore.getState().todos[0].id;
+			useTodoStore.getState().removeTodo(todoId);
 
-			const todos = store.get(todosAtom);
+			const todos = useTodoStore.getState().todos;
 			expect(todos).toHaveLength(1);
 			expect(todos[0].title).toBe("タスク2");
 		});
 	});
 
-	describe("reorderTodosAtom", () => {
+	describe("reorderTodos", () => {
 		it("タスクの並び順を変更できる", () => {
-			const store = createTestStore();
-			store.set(addTodoAtom, { title: "タスク1" });
-			store.set(addTodoAtom, { title: "タスク2" });
-			store.set(addTodoAtom, { title: "タスク3" });
+			useTodoStore.getState().addTodo({ title: "タスク1" });
+			useTodoStore.getState().addTodo({ title: "タスク2" });
+			useTodoStore.getState().addTodo({ title: "タスク3" });
 
-			const todos = store.get(todosAtom);
 			// タスク3 を先頭に移動（fromIndex: 2, toIndex: 0）
-			store.set(reorderTodosAtom, { fromIndex: 2, toIndex: 0 });
+			useTodoStore.getState().reorderTodos({ fromIndex: 2, toIndex: 0 });
 
-			const reordered = store.get(todosAtom);
+			const reordered = useTodoStore.getState().todos;
 			expect(reordered[0].title).toBe("タスク3");
 			expect(reordered[1].title).toBe("タスク1");
 			expect(reordered[2].title).toBe("タスク2");
 		});
 	});
 
-	describe("completedCountAtom", () => {
+	describe("getCompletedCount", () => {
 		it("完了タスク数を返す", () => {
-			const store = createTestStore();
-			expect(store.get(completedCountAtom)).toBe(0);
+			expect(getCompletedCount([])).toBe(0);
 
-			store.set(addTodoAtom, { title: "タスク1" });
-			store.set(addTodoAtom, { title: "タスク2" });
+			useTodoStore.getState().addTodo({ title: "タスク1" });
+			useTodoStore.getState().addTodo({ title: "タスク2" });
 
-			const [id1, id2] = store.get(todosAtom).map((t: Todo) => t.id);
-			store.set(toggleTodoAtom, id1);
-			expect(store.get(completedCountAtom)).toBe(1);
+			const [id1, id2] = useTodoStore.getState().todos.map((t: Todo) => t.id);
+			useTodoStore.getState().toggleTodo(id1);
+			expect(getCompletedCount(useTodoStore.getState().todos)).toBe(1);
 
-			store.set(toggleTodoAtom, id2);
-			expect(store.get(completedCountAtom)).toBe(2);
+			useTodoStore.getState().toggleTodo(id2);
+			expect(getCompletedCount(useTodoStore.getState().todos)).toBe(2);
 		});
 	});
 });

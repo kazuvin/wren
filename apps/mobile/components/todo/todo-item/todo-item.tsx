@@ -1,10 +1,8 @@
 import { colors, parseNumeric, radius, spacing } from "@wren/design-tokens";
-import { useSetAtom } from "jotai";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { textBase } from "../../../constants/theme";
-import type { Todo } from "../../../stores/todo-store";
-import { toggleTodoAtom } from "../../../stores/todo-store";
+import { type Todo, useTodoStore } from "../../../stores/todo-store";
 
 type TodoItemProps = {
 	todo: Todo;
@@ -13,7 +11,7 @@ type TodoItemProps = {
 export function TodoItem({ todo }: TodoItemProps) {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const toggleTodo = useSetAtom(toggleTodoAtom);
+	const toggleTodo = useTodoStore((s) => s.toggleTodo);
 
 	return (
 		<Animated.View entering={FadeIn} exiting={FadeOut}>
