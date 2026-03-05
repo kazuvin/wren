@@ -1,4 +1,4 @@
-import { AddTodoFab, Character, TodoList } from "@/features/todo";
+import { AddTodoFab, CharacterContainer, TodoListContainer } from "@/features/todo";
 import { colors, parseNumeric, spacing } from "@wren/design-tokens";
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, View, useColorScheme } from "react-native";
@@ -15,8 +15,8 @@ export default function HomeScreen() {
 				contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 16 }]}
 				showsVerticalScrollIndicator={false}
 			>
-				<Character />
-				<TodoList />
+				<CharacterContainer />
+				<TodoListContainer />
 				<View style={styles.bottomSpacer} />
 			</ScrollView>
 			<AddTodoFab onPress={() => router.push("/modal")} />

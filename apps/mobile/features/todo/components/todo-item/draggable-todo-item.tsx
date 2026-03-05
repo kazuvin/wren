@@ -1,31 +1,33 @@
 import { colors, parseNumeric, radius, spacing } from "@wren/design-tokens";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
+import type { GestureType } from "react-native-gesture-handler";
 import { GestureDetector } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
+import Animated, { type AnimatedStyle } from "react-native-reanimated";
 import { textBase } from "../../../../constants/theme";
-import { useDragReorder } from "../../hooks/use-drag-reorder";
 import type { Todo } from "../../stores/todo-store";
-import { useTodoStore } from "../../stores/todo-store";
 
 type DraggableTodoItemProps = {
 	todo: Todo;
-	index: number;
-	totalCount: number;
-	onReorder: (fromIndex: number, toIndex: number) => void;
+	onToggle: (id: string) => void;
+	panGesture: GestureType;
+	animatedStyle: AnimatedStyle;
 };
 
-export function DraggableTodoItem({ todo, index, totalCount, onReorder }: DraggableTodoItemProps) {
+export function DraggableTodoItem({
+	todo,
+	onToggle,
+	panGesture,
+	animatedStyle,
+}: DraggableTodoItemProps) {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const toggleTodo = useTodoStore((s) => s.toggleTodo);
-	const { panGesture, animatedStyle } = useDragReorder({ index, totalCount, onReorder });
 
 	return (
 		<GestureDetector gesture={panGesture}>
 			<Animated.View style={animatedStyle}>
 				<Pressable
 					style={[styles.container, { backgroundColor: theme.card, borderColor: theme.border }]}
-					onPress={() => toggleTodo(todo.id)}
+					onPress={() => onToggle(todo.id)}
 					accessibilityRole="checkbox"
 					accessibilityState={{ checked: todo.completed }}
 				>

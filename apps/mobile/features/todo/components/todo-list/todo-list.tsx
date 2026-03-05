@@ -1,13 +1,17 @@
 import { colors, parseNumeric, spacing } from "@wren/design-tokens";
 import { StyleSheet, Text, View, useColorScheme } from "react-native";
 import { textBase } from "../../../../constants/theme";
-import { useTodoList } from "../../hooks/use-todo-list";
-import { DraggableTodoItem } from "../todo-item/draggable-todo-item";
+import type { Todo } from "../../stores/todo-store";
+import { DraggableTodoItemContainer } from "../todo-item/draggable-todo-item-container";
 
-export function TodoList() {
+type TodoListProps = {
+	todos: Todo[];
+	onReorder: (fromIndex: number, toIndex: number) => void;
+};
+
+export function TodoList({ todos, onReorder }: TodoListProps) {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
-	const { todos, handleReorder } = useTodoList();
 
 	return (
 		<View style={styles.container}>
@@ -19,12 +23,12 @@ export function TodoList() {
 					</Text>
 				) : (
 					todos.map((todo, index) => (
-						<DraggableTodoItem
+						<DraggableTodoItemContainer
 							key={todo.id}
 							todo={todo}
 							index={index}
 							totalCount={todos.length}
-							onReorder={handleReorder}
+							onReorder={onReorder}
 						/>
 					))
 				)}
