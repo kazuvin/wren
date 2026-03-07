@@ -13,7 +13,10 @@
       "Bash(xargs cat:*)",
       "Skill(design-tokens)",
       "Skill(reanimated-patterns)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(echo Checking...:*)",
+      "Bash(grep:*)",
+      "Bash(tail:*)"
     ]
   }
 }

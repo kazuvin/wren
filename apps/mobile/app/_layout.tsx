@@ -17,6 +17,8 @@ export default function RootLayout() {
 					<Stack>
 						<Stack.Screen name="index" options={{ headerShown: false }} />
 						<Stack.Screen name="modal" options={{ presentation: "modal", title: "タスクを追加" }} />
+						<Stack.Screen name="skills" options={{ presentation: "modal", title: "スキル管理" }} />
+						<Stack.Screen name="equipment" options={{ presentation: "modal", title: "装備管理" }} />
 					</Stack>
 					<StatusBar style="auto" />
 				</ThemeProvider>
