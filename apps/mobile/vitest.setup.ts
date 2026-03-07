@@ -93,3 +93,12 @@ vi.mock("react-native-keyboard-controller", () => ({
 		progress: { value: 0 },
 	}),
 }));
+
+vi.mock("expo-haptics", () => ({
+	impactAsync: vi.fn(),
+	ImpactFeedbackStyle: {
+		Light: "light",
+		Medium: "medium",
+		Heavy: "heavy",
+	},
+}));

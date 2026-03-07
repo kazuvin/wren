@@ -1,4 +1,5 @@
-import { useDragReorder } from "../../hooks/use-drag-reorder";
+import { useDragReorderItem } from "../../hooks/use-drag-reorder-item";
+import type { DragState } from "../../hooks/use-drag-reorder-list";
 import type { Todo } from "../../stores/todo-store";
 import { useTodoStore } from "../../stores/todo-store";
 import { DraggableTodoItem } from "./draggable-todo-item";
@@ -8,6 +9,7 @@ type DraggableTodoItemContainerProps = {
 	index: number;
 	totalCount: number;
 	onReorder: (fromIndex: number, toIndex: number) => void;
+	dragState: DragState;
 };
 
 export function DraggableTodoItemContainer({
@@ -15,9 +17,15 @@ export function DraggableTodoItemContainer({
 	index,
 	totalCount,
 	onReorder,
+	dragState,
 }: DraggableTodoItemContainerProps) {
 	const toggleTodo = useTodoStore((s) => s.toggleTodo);
-	const { panGesture, animatedStyle } = useDragReorder({ index, totalCount, onReorder });
+	const { panGesture, animatedStyle } = useDragReorderItem({
+		index,
+		totalCount,
+		dragState,
+		onReorder,
+	});
 
 	return (
 		<DraggableTodoItem
