@@ -1,5 +1,6 @@
 import { useDragReorderItem } from "../../hooks/use-drag-reorder-item";
 import type { DragState } from "../../hooks/use-drag-reorder-list";
+import { useSwipeAction } from "../../hooks/use-swipe-action";
 import type { Todo } from "../../stores/todo-store";
 import { useTodoStore } from "../../stores/todo-store";
 import { DraggableTodoItem } from "./draggable-todo-item";
@@ -20,11 +21,22 @@ export function DraggableTodoItemContainer({
 	dragState,
 }: DraggableTodoItemContainerProps) {
 	const toggleTodo = useTodoStore((s) => s.toggleTodo);
-	const { panGesture, animatedStyle } = useDragReorderItem({
+	const removeTodo = useTodoStore((s) => s.removeTodo);
+
+	const { panGesture, animatedStyle: dragAnimatedStyle } = useDragReorderItem({
 		index,
 		totalCount,
 		dragState,
 		onReorder,
+	});
+
+	const {
+		swipeGesture,
+		translateX,
+		itemAnimatedStyle: swipeAnimatedStyle,
+	} = useSwipeAction({
+		onSwipeRight: () => toggleTodo(todo.id),
+		onSwipeLeft: () => removeTodo(todo.id),
 	});
 
 	return (
@@ -32,7 +44,10 @@ export function DraggableTodoItemContainer({
 			todo={todo}
 			onToggle={toggleTodo}
 			panGesture={panGesture}
-			animatedStyle={animatedStyle}
+			dragAnimatedStyle={dragAnimatedStyle}
+			swipeGesture={swipeGesture}
+			swipeAnimatedStyle={swipeAnimatedStyle}
+			swipeTranslateX={translateX}
 		/>
 	);
 }

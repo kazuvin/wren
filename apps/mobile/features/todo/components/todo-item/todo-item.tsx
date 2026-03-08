@@ -1,48 +1,67 @@
 import { colors, parseNumeric, radius, spacing } from "@wren/design-tokens";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import type { GestureType } from "react-native-gesture-handler";
+import { GestureDetector } from "react-native-gesture-handler";
+import Animated, { type AnimatedStyle, FadeIn, FadeOut } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 import { textBase } from "../../../../constants/theme";
 import type { Todo } from "../../stores/todo-store";
+import { SwipeableRow } from "./swipeable-row";
 
 type TodoItemProps = {
 	todo: Todo;
 	onToggle: (id: string) => void;
+	swipeGesture: GestureType;
+	swipeAnimatedStyle: AnimatedStyle;
+	swipeTranslateX: SharedValue<number>;
 };
 
-export function TodoItem({ todo, onToggle }: TodoItemProps) {
+export function TodoItem({
+	todo,
+	onToggle,
+	swipeGesture,
+	swipeAnimatedStyle,
+	swipeTranslateX,
+}: TodoItemProps) {
 	const scheme = useColorScheme() ?? "light";
 	const theme = colors[scheme];
 
 	return (
 		<Animated.View entering={FadeIn} exiting={FadeOut}>
-			<Pressable
-				style={[styles.container, { backgroundColor: theme.card, borderColor: theme.border }]}
-				onPress={() => onToggle(todo.id)}
-				accessibilityRole="checkbox"
-				accessibilityState={{ checked: todo.completed }}
-			>
-				<Text style={styles.emoji}>{todo.emoji}</Text>
-				<Text
-					style={[
-						styles.title,
-						{ color: theme.foreground },
-						todo.completed && styles.completedTitle,
-						todo.completed && { color: theme.mutedForeground },
-					]}
-					numberOfLines={1}
-				>
-					{todo.title}
-				</Text>
-				<View
-					style={[
-						styles.checkbox,
-						{ borderColor: theme.border },
-						todo.completed && { backgroundColor: theme.primary, borderColor: theme.primary },
-					]}
-				>
-					{todo.completed && <Text style={styles.checkmark}>✓</Text>}
-				</View>
-			</Pressable>
+			<SwipeableRow translateX={swipeTranslateX}>
+				<GestureDetector gesture={swipeGesture}>
+					<Animated.View style={swipeAnimatedStyle}>
+						<Pressable
+							style={[styles.container, { backgroundColor: theme.card, borderColor: theme.border }]}
+							onPress={() => onToggle(todo.id)}
+							accessibilityRole="checkbox"
+							accessibilityState={{ checked: todo.completed }}
+						>
+							<Text style={styles.emoji}>{todo.emoji}</Text>
+							<Text
+								style={[
+									styles.title,
+									{ color: theme.foreground },
+									todo.completed && styles.completedTitle,
+									todo.completed && { color: theme.mutedForeground },
+								]}
+								numberOfLines={1}
+							>
+								{todo.title}
+							</Text>
+							<View
+								style={[
+									styles.checkbox,
+									{ borderColor: theme.border },
+									todo.completed && { backgroundColor: theme.primary, borderColor: theme.primary },
+								]}
+							>
+								{todo.completed && <Text style={styles.checkmark}>✓</Text>}
+							</View>
+						</Pressable>
+					</Animated.View>
+				</GestureDetector>
+			</SwipeableRow>
 		</Animated.View>
 	);
 }
