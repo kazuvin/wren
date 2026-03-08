@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { type Todo, getCompletedCount, useTodoStore } from "./todo-store";
+import { type Todo, getCompletedCount, splitTodos, useTodoStore } from "./todo-store";
 
 describe("todo-store", () => {
 	beforeEach(() => {
@@ -89,6 +89,39 @@ describe("todo-store", () => {
 			expect(reordered[0].title).toBe("タスク3");
 			expect(reordered[1].title).toBe("タスク1");
 			expect(reordered[2].title).toBe("タスク2");
+		});
+	});
+
+	describe("splitTodos", () => {
+		it("空配列を渡すと pending/completed ともに空", () => {
+			const result = splitTodos([]);
+			expect(result.pending).toEqual([]);
+			expect(result.completed).toEqual([]);
+		});
+
+		it("未完了タスクは pending に、完了タスクは completed に分類される", () => {
+			const todos: Todo[] = [
+				{ id: "1", title: "未完了", emoji: "📝", completed: false },
+				{ id: "2", title: "完了済み", emoji: "✅", completed: true },
+				{ id: "3", title: "未完了2", emoji: "📝", completed: false },
+			];
+			const result = splitTodos(todos);
+			expect(result.pending).toHaveLength(2);
+			expect(result.completed).toHaveLength(1);
+			expect(result.pending[0].id).toBe("1");
+			expect(result.pending[1].id).toBe("3");
+			expect(result.completed[0].id).toBe("2");
+		});
+
+		it("元の順序が保持される", () => {
+			const todos: Todo[] = [
+				{ id: "1", title: "A", emoji: "📝", completed: true },
+				{ id: "2", title: "B", emoji: "📝", completed: true },
+				{ id: "3", title: "C", emoji: "📝", completed: false },
+			];
+			const result = splitTodos(todos);
+			expect(result.completed[0].id).toBe("1");
+			expect(result.completed[1].id).toBe("2");
 		});
 	});
 

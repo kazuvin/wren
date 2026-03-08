@@ -55,3 +55,16 @@ export const useTodoStore = create<TodoState>((set) => ({
 export function getCompletedCount(todos: Todo[]): number {
 	return todos.filter((todo) => todo.completed).length;
 }
+
+export function splitTodos(todos: Todo[]): { pending: Todo[]; completed: Todo[] } {
+	const pending: Todo[] = [];
+	const completed: Todo[] = [];
+	for (const todo of todos) {
+		if (todo.completed) {
+			completed.push(todo);
+		} else {
+			pending.push(todo);
+		}
+	}
+	return { pending, completed };
+}
