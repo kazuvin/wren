@@ -3,8 +3,15 @@ import { useTodoList } from "../../hooks/use-todo-list";
 import { TodoList } from "./todo-list";
 
 export function TodoListContainer() {
-	const { todos, handleReorder } = useTodoList();
+	const { pendingTodos, completedTodos, handleReorder } = useTodoList();
 	const dragState = useDragReorderList();
 
-	return <TodoList todos={todos} onReorder={handleReorder} dragState={dragState} />;
+	return (
+		<TodoList
+			pendingTodos={pendingTodos}
+			completedTodos={completedTodos}
+			onReorder={handleReorder}
+			dragState={dragState}
+		/>
+	);
 }

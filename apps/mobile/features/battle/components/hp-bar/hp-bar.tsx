@@ -17,7 +17,6 @@ export function HPBar({ current, max, color, height = 8 }: HPBarProps) {
 	const fillColor = color ?? theme.success;
 	const ratio = max > 0 ? Math.max(0, Math.min(current / max, 1)) : 0;
 
-
 	const anim = useRef(new Animated.Value(ratio)).current;
 
 	useEffect(() => {

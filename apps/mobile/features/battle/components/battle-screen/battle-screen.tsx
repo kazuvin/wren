@@ -126,58 +126,77 @@ export function BattleScreen({
 				)}
 			</View>
 
-			{/* Battle area */}
-			<View style={styles.battleArea}>
-				{/* Hero */}
-				<View style={styles.characterColumn}>
-					<Animated.View style={[styles.emojiWrap, heroAnimatedStyle]}>
-						<Text style={styles.emoji}>{"🧙"}</Text>
-					</Animated.View>
-					<HPBar
-						current={heroEffectiveStats.hp}
-						max={heroEffectiveStats.maxHp}
-						color={theme.success}
-					/>
+			{/* Battle area with defeat overlay */}
+			<View style={styles.battleAreaWrapper}>
+				<View style={styles.battleArea}>
+					{/* Hero */}
+					<View style={styles.characterColumn}>
+						<Animated.View style={[styles.emojiWrap, heroAnimatedStyle]}>
+							<Text style={styles.emoji}>{"🧙"}</Text>
+						</Animated.View>
+						<HPBar
+							current={heroEffectiveStats.hp}
+							max={heroEffectiveStats.maxHp}
+							color={theme.success}
+						/>
+					</View>
+
+					{/* Monster */}
+					<View style={styles.characterColumn}>
+						<Animated.View style={[styles.emojiWrap, monsterAnimatedStyle]}>
+							<Text style={styles.emoji}>{monster.emoji}</Text>
+						</Animated.View>
+						<HPBar current={monster.hp} max={monster.maxHp} color={theme.destructive} />
+					</View>
 				</View>
 
-				{/* Monster */}
-				<View style={styles.characterColumn}>
-					<Animated.View style={[styles.emojiWrap, monsterAnimatedStyle]}>
-						<Text style={styles.emoji}>{monster.emoji}</Text>
-					</Animated.View>
-					<HPBar current={monster.hp} max={monster.maxHp} color={theme.destructive} />
-				</View>
-			</View>
+				{/* Skill slots */}
+				<View style={styles.skillRow}>
+					{skillSlots.map((slot, slotIndex) => {
+						const slotKey = slot ? `skill-${slot.skillId}` : `slot-${String(slotIndex)}`;
+						if (slot === null) {
+							return (
+								<View key={slotKey} style={[styles.skillSlot, { borderColor: theme.border }]}>
+									<Text style={[styles.skillSlotEmpty, { color: theme.mutedForeground }]}>-</Text>
+								</View>
+							);
+						}
 
-			{/* Skill slots */}
-			<View style={styles.skillRow}>
-				{skillSlots.map((slot, slotIndex) => {
-					const slotKey = slot ? `skill-${slot.skillId}` : `slot-${String(slotIndex)}`;
-					if (slot === null) {
+						const skillDef = getSkillDefinition(slot.skillId);
 						return (
 							<View key={slotKey} style={[styles.skillSlot, { borderColor: theme.border }]}>
-								<Text style={[styles.skillSlotEmpty, { color: theme.mutedForeground }]}>-</Text>
+								<Text style={styles.skillEmoji}>{skillDef?.emoji ?? "?"}</Text>
+								<Text
+									style={[
+										styles.skillCooldown,
+										{
+											color: slot.currentCooldown === 0 ? theme.success : theme.mutedForeground,
+										},
+									]}
+								>
+									{slot.currentCooldown}
+								</Text>
 							</View>
 						);
-					}
+					})}
+				</View>
 
-					const skillDef = getSkillDefinition(slot.skillId);
-					return (
-						<View key={slotKey} style={[styles.skillSlot, { borderColor: theme.border }]}>
-							<Text style={styles.skillEmoji}>{skillDef?.emoji ?? "?"}</Text>
-							<Text
-								style={[
-									styles.skillCooldown,
-									{
-										color: slot.currentCooldown === 0 ? theme.success : theme.mutedForeground,
-									},
-								]}
-							>
-								{slot.currentCooldown}
+				{/* Defeat overlay - positioned absolutely to prevent layout shift */}
+				{isDefeated && (
+					<View style={[styles.defeatOverlay, { backgroundColor: `${theme.muted}EE` }]}>
+						<Text style={[styles.defeatText, { color: theme.destructive }]}>
+							{"💀"} 勇者は倒れた...
+						</Text>
+						<Pressable
+							style={[styles.retryButton, { backgroundColor: theme.primary }]}
+							onPress={onRetry}
+						>
+							<Text style={[styles.retryButtonText, { color: theme.primaryForeground }]}>
+								{"⚔️"} 再戦する
 							</Text>
-						</View>
-					);
-				})}
+						</Pressable>
+					</View>
+				)}
 			</View>
 
 			{/* Battle log */}
@@ -197,23 +216,6 @@ export function BattleScreen({
 					))
 				)}
 			</View>
-
-			{/* Defeat overlay */}
-			{isDefeated && (
-				<View style={[styles.defeatOverlay, { backgroundColor: theme.muted }]}>
-					<Text style={[styles.defeatText, { color: theme.destructive }]}>
-						{"💀"} 勇者は倒れた...
-					</Text>
-					<Pressable
-						style={[styles.retryButton, { backgroundColor: theme.primary }]}
-						onPress={onRetry}
-					>
-						<Text style={[styles.retryButtonText, { color: theme.primaryForeground }]}>
-							{"⚔️"} 再戦する
-						</Text>
-					</Pressable>
-				</View>
-			)}
 
 			{/* Navigation buttons */}
 			<View style={styles.navRow}>
@@ -259,6 +261,9 @@ const styles = StyleSheet.create({
 		...textBase,
 		fontSize: 12,
 		fontWeight: "700",
+	},
+	battleAreaWrapper: {
+		gap: parseNumeric(spacing[3]),
 	},
 	battleArea: {
 		flexDirection: "row",
@@ -315,8 +320,13 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 	},
 	defeatOverlay: {
+		position: "absolute",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
 		borderRadius: parseNumeric(radius.md),
-		padding: parseNumeric(spacing[4]),
+		justifyContent: "center",
 		alignItems: "center",
 		gap: parseNumeric(spacing[3]),
 	},
