@@ -32,10 +32,10 @@ export function DraggableTodoItem({
 	const composedGesture = Gesture.Race(panGesture, swipeGesture);
 
 	return (
-		<SwipeableRow translateX={swipeTranslateX}>
-			<GestureDetector gesture={composedGesture}>
-				<Animated.View style={swipeAnimatedStyle}>
-					<Animated.View style={dragAnimatedStyle}>
+		<Animated.View style={dragAnimatedStyle}>
+			<SwipeableRow translateX={swipeTranslateX}>
+				<GestureDetector gesture={composedGesture}>
+					<Animated.View style={swipeAnimatedStyle}>
 						<Pressable
 							style={[styles.container, { backgroundColor: theme.card, borderColor: theme.border }]}
 							onPress={() => onToggle(todo.id)}
@@ -66,9 +66,9 @@ export function DraggableTodoItem({
 							</View>
 						</Pressable>
 					</Animated.View>
-				</Animated.View>
-			</GestureDetector>
-		</SwipeableRow>
+				</GestureDetector>
+			</SwipeableRow>
+		</Animated.View>
 	);
 }
 
